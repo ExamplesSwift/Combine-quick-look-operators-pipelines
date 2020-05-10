@@ -16,4 +16,26 @@ let _ = Just(answer)
     print("Your answer is \(receivedValue)")
 }
 
+let passthroughSubject = PassthroughSubject<String, Never>()
+
+let subscription = passthroughSubject
+.print("Example Debug: ")
+  .sink { value in
+    print("Got the value!")
+}
+passthroughSubject.send("42")
+subscription.cancel()
+
+let passthroughSubject12 = PassthroughSubject<Array<Int>, Never>()
+let subscription2 = passthroughSubject12
+  .allSatisfy { (values) in
+    return values.allSatisfy { ($0) < 10 }
+}.sink { satisfy in
+  print("The accepted values satisfy the predicate: \(satisfy)");
+}
+
+passthroughSubject12.send([2, 6, 9, 10, 12, 15, 17, 20])
+subscription2.cancel()
+
+
 
